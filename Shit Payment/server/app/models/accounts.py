@@ -37,8 +37,7 @@ class Accounts(Base):
   credit_score = Column(Integer, default=0, min=0, max=850)
   account_type = Column(String, default="None")
   active = Column(Boolean, default=True)
-
-
+  user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
   # Relationships
-user = relationship("User", back_populates="accounts")
+  user = relationship("User", back_populates="accounts")
