@@ -1,16 +1,34 @@
-from datetime import datetime
-
-from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
 
 from .base import Base
+from .users import User
 
 
-class Transaction(Base):
-    __tablename__ = "transactions"
-    
-    id = Column(Integer, primary_key=True)
-    account_id = Column(Integer, ForeignKey("accounts.id"), nullable=False)
-    transaction_id = Column(String, unique=True, index=True)
-    amount = Column(Float, nullable=False)
-    transaction_type = Column(String)  # e.g., "deposit", "withdrawal", "transfer"
-    timestamp = Column(DateTime, default=datetime.utcnow)
+class Bank(Base):
+  __tablename__ = 'banks'
+  id = Column(Integer, primary_key=True, index=True)
+  name = Column(String, unique=True, index=True)
+
+class transfer(Base):
+  __tablename__ = 'transfers'
+
+class investments(Base):
+  __tablename__ = 'investments'
+
+class Loan(Base):
+  __tablename__ = 'loans'
+  id = Column(Integer, primary_key=True, index=True)
+  user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+  loan_id = Column(String, unique=True, index=True)
+  amount = Column(Integer, default=0)
+  interest_rate = Column(Integer, default=0)
+  loan_term = Column(Integer, default=0)
+  loan_status = Column(String, default="None")
+  loan_type = Column(String, default="None")
+  loan_date = Column(String, default="None")
+
+
+
+
+
