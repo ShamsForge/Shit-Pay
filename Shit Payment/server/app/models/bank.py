@@ -8,6 +8,7 @@ from .users import User
 class Bank(Base):
   __tablename__ = 'banks'
   id = Column(Integer, primary_key=True, index=True)
+  shit_id = Column(String, index=True)
   name = Column(String, unique=True, index=True)
 
 class transfer(Base):
@@ -19,7 +20,6 @@ class investments(Base):
 class Loan(Base):
   __tablename__ = 'loans'
   id = Column(Integer, primary_key=True, index=True)
-  user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
   loan_id = Column(String, unique=True, index=True)
   amount = Column(Integer, default=0)
   interest_rate = Column(Integer, default=0)
@@ -30,5 +30,6 @@ class Loan(Base):
 
 
 
-
+  user = relationship("User", back_populates="loans")
+  accounts = relationship("Accounts", back_populates="loans")
 

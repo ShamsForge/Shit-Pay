@@ -1,15 +1,14 @@
 import datetime
 import uuid
 from enum import StrEnum
-from typing import Optional
 
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.sqltypes import UUID
 
 from .accounts import Accounts
+from .bank import Bank
 from .base import Base
-from .loan import Loan
 from .user_session import UserSession
 
 
@@ -27,9 +26,11 @@ def get_display_name(self) -> str:
       IdentityVerificationStatus.failed: "Failed",
   }[self]
 
+
 class User(Base):
   __tablename__ = 'users'
   id = Column(UUID, primary_key=True, index=True)
+  shit_id = Column(String, index=True)
   email = Column(String, unique=True, index=True)
   username = Column(String, unique=True, index=True)
   password = Column(String)
@@ -40,8 +41,10 @@ class User(Base):
   active = Column(Boolean, default=True)
   superuser = Column(Boolean, default=False)
   email_verified = Column(Boolean, nullable=False, default=False)
-  verified = Column(Boolean, default=False)
+  verified = Column(get_display_name = None)
   
   
   
   accounts = relationship("Accounts", back_populates="user")
+  bank = relationship("Bank", back_populates="user")
+  user_session = relationship("UserSession", back_populates="user")

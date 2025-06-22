@@ -31,7 +31,7 @@ class Accounts(Base):
   __tablename__ = 'accounts'
   
   id = Column(Integer, primary_key=True, index=True)
-  shit_id = Column(String, unique=True, index=True)
+  shit_id = Column(String, index=True)
   balance = Column(Integer, default=0)
   account_limit = Column(Integer, default=10000)
   credit_score = Column(Integer, default=0, min=0, max=850)
@@ -40,4 +40,7 @@ class Accounts(Base):
   user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
   # Relationships
-  user = relationship("User", back_populates="accounts")
+  user = relationship("User", 
+                      back_populates="accounts")
+  bank = relationship("Bank", back_populates="accounts")
+    
