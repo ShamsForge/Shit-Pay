@@ -1,8 +1,8 @@
+import uuid
 from enum import StrEnum
 
 #from typing import Annotated
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
 
 from .base import Base
 from .users import User
@@ -31,7 +31,8 @@ class Accounts(Base):
   __tablename__ = 'accounts'
   
   id = Column(Integer, primary_key=True, index=True)
-  shit_id = Column(String, index=True)
+  uuid = Column(default_factory=uuid.uuid4, primary_key=True, unique=True)
+  shit_id = Column(String, ForeignKey(User.shit_id), index=True)
   balance = Column(Integer, default=0)
   account_limit = Column(Integer, default=10000)
   credit_score = Column(Integer, default=0, min=0, max=850)
@@ -39,8 +40,4 @@ class Accounts(Base):
   active = Column(Boolean, default=True)
   user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
-  # Relationships
-  user = relationship("User", 
-                      back_populates="accounts")
-  bank = relationship("Bank", back_populates="accounts")
-    
+

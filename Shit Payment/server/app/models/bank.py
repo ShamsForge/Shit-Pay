@@ -1,5 +1,6 @@
+import uuid
+
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
 
 from .base import Base
 from .users import User
@@ -8,14 +9,23 @@ from .users import User
 class Bank(Base):
   __tablename__ = 'banks'
   id = Column(Integer, primary_key=True, index=True)
-  shit_id = Column(String, index=True)
+  uuid = Column(default_factory=uuid.uuid4, primary_key=True, unique=True)
+  shit_id = Column(String, ForeignKey(User.shit_id), index=True)
   name = Column(String, unique=True, index=True)
 
 class transfer(Base):
   __tablename__ = 'transfers'
+  id = Column(Integer, primary_key=True, index=True)
+  money = Column(Integer, default=0)
+  money_from = Column(String, default="None")
+  money_to = Column(String, default="None")
+  transfer_type = Column(String, default="None")
+  transfer_date = Column(String, default="None")
+  
 
 class investments(Base):
   __tablename__ = 'investments'
+  pass
 
 class Loan(Base):
   __tablename__ = 'loans'
@@ -30,6 +40,4 @@ class Loan(Base):
 
 
 
-  user = relationship("User", back_populates="loans")
-  accounts = relationship("Accounts", back_populates="loans")
 
