@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
+from sqlalchemy.sql.sqltypes import UUID
 
 
 # Base User Models = 2
@@ -23,15 +24,9 @@ class UserBase(BaseModel):
 
 
 
-class User(BaseModel):
-    shit_id: Annotated[str,
-    Field(min_length=3, max_length=10,
-    pattern=r"^[a-z0-9@#$_-]+$",
-    title="ID used for transactions",
-    examples=["shit@123"])
-    ]
+class User(UserBase):
 
-    hashed_pin: int
+    user_uuid: UUID
     hashed_password: str
     
     country_code: Annotated[int,
@@ -67,13 +62,6 @@ class User(BaseModel):
 ## UserCreate
 class UserCreate(UserBase):
     model_config = ConfigDict(extra="forbid")
-    
-    pin: Annotated[int,
-    Field(ge=1000, le=9999,
-    pattern=r"^\d{4}$",
-    title="4 digit pin",
-    description="Secured Pin used for transactions",
-    examples=[1234])]
 
     password: Annotated[str,
     Field(pattern=r"^.{8,}|[0-9]+|[A-Z]+|[a-z]+|[^a-zA-Z0-9]+$",
@@ -84,7 +72,6 @@ class UserCreate(UserBase):
     examples=["Str1ngst!"])]
 
 class UserCreateInternal(UserBase):
-    hashed_pin: int
     hashed_password: str
 
 

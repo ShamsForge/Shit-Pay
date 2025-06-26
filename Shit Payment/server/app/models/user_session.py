@@ -1,5 +1,5 @@
-import uuid
 from datetime import datetime
+from uuid import UUID
 
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
 
@@ -9,8 +9,9 @@ from .users import User  # For the foreign key relationship
 
 class UserSession(Base):
     __tablename__ = "user_sessions"
-    id = Column(Integer, primary_key=True, index=True)
-    uuid = Column(default_factory=uuid.uuid4, primary_key=True, unique=True)
+    id = Column(Integer, autoincrement=True, nullable=False,
+                unique=True, primary_key=True, init=False)
+    user_uuid = Column(UUID, ForeignKey(User.uuid), primary_key=True)
     shit_id = Column(String, ForeignKey(User.shit_id), index=True)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     token = Column(String, nullable=False,

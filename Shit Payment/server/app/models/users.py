@@ -1,17 +1,18 @@
 import datetime
-import uuid
 from enum import StrEnum
+from uuid import UUID
 
 from sqlalchemy import Boolean, Column, Integer, String
+from sqlalchemy.sql.sqltypes import UUID
 
 from .base import Base
 
 
 class User(Base):
   __tablename__ = 'users'
-  id = Column(Integer, autoincrement=True, nullable=False, unique=True,
-  primary_key=True, init=False)
-  uuid = Column(default_factory=uuid.uuid4, primary_key=True, unique=True)
+  id = Column(Integer, autoincrement=True, nullable=False,
+              unique=True, primary_key=True, init=False)
+  uuid = Column(UUID, primary_key=True, unique=True)
   shit_id = Column(String, index=True)
   email = Column(String, unique=True, index=True)
   username = Column(String, unique=True, index=True)

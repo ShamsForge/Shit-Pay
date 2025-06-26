@@ -1,43 +1,34 @@
 import uuid
 from enum import StrEnum
+from uuid import UUID
 
-#from typing import Annotated
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Boolean, CheckConstraint, Column, ForeignKey, Integer, String
+from sqlalchemy.sql.sqltypes import UUID
 
 from .base import Base
 from .users import User
 
 
-class Accounts(Base):
-  
-  class Status(StrEnum):
-        CREATED = "created"
-        ONBOARDING_STARTED = "onboarding_started"
-        UNDER_REVIEW = "under_review"
-        DENIED = "denied"
-        ACTIVE = "active"
-      
+class AccountType(StrEnum):
+    CURRENT = "current acc"
+    SAVINGS = "savings acc"
 
-        def get_display_name(self) -> str:
-            return {
-                Accounts.Status.CREATED: "Created",
-                Accounts.Status.ONBOARDING_STARTED: "Onboarding Started",
-                Accounts.Status.UNDER_REVIEW: "Under Review",
-                Accounts.Status.DENIED: "Denied",
-                Accounts.Status.ACTIVE: "Active",
-            }[self]
-          
-  
+class Accounts(Base):
   __tablename__ = 'accounts'
-  
-  id = Column(Integer, primary_key=True, index=True)
-  uuid = Column(default_factory=uuid.uuid4, primary_key=True, unique=True)
+
+    
+  id = Column(Integer, autoincrement=True, nullable=False,
+              unique=True, primary_key=True, init=False)
+  user_uuid = Column(UUID, ForeignKey(User.uuid), primary_key=True)
+  user_id = Column(Integer, ForeignKey(User.id), nullable=False)
+    
   shit_id = Column(String, ForeignKey(User.shit_id), index=True)
-  balance = Column(Integer, default=0)
-  account_limit = Column(Integer, default=10000)
-  credit_score = Column(Integer, default=0, min=0, max=850)
-  account_type = Column(String, default="None")
+  hashed_pin = Column(Integer, ForeignKey(User.hashed_pin), index=True)
   active = Column(Boolean, default=True)
-  user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    
+    ## Account features
+  balance = Column(Integer, default=0)
+  credit_limit = Column(Integer, default=10000, min=0, max=80000)
+  credit_score = Column(Integer, default=0, min=0, max=850)
 
 
